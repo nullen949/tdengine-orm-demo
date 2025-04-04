@@ -1,6 +1,6 @@
-package com.demo.tdengineorm.dto;
+package com.nullen.demo.tdengineorm.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.nullen.tdengineorm.annotation.TdColumn;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 /**
  * 对于关联查询结果，最好使用一个新的对象接收
  *
- * @author Klaus
+ * @author Nullen
  */
 @Data
 public class JoinResultDTO {
@@ -17,6 +17,6 @@ public class JoinResultDTO {
     private Long id;
     private String name;
     private Integer age;
-    @TableField("a_b_cd_efgg_a")
+    @TdColumn("a_b_cd_efgg_a")
     private String aBCdEfggA;
 }

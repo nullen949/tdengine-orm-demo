@@ -1,28 +1,28 @@
-package com.demo.tdengineorm.entity;
+package com.nullen.demo.tdengineorm.entity;
 
-import com.kalus.tdengineorm.annotation.TdField;
-import com.kalus.tdengineorm.annotation.TdTag;
-import com.kalus.tdengineorm.entity.BaseTdEntity;
+import com.nullen.tdengineorm.annotation.TdColumn;
+import com.nullen.tdengineorm.annotation.TdTag;
+import com.nullen.tdengineorm.entity.TdBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * 用于测试关联查询
  *
- * @author Klaus
+ * @author Nullen
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TestDeviceB extends BaseTdEntity {
+public class TestDeviceB extends TdBaseEntity {
     /**
      * 关联设备TestDeviceA.deviceBId字段
      */
     private Long id;
-    @TdField(length = 128)
+    @TdColumn(length = 128)
     private String name;
     private Integer age;
 
     @TdTag
-    @TdField(length = 128)
+    @TdColumn(length = 128)
     private String deviceCode;
 }

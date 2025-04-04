@@ -1,17 +1,17 @@
-package com.demo.test;
+package com.nullen.demo.tdengineorm.test;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
-import com.demo.tdengineorm.DemoApplication;
-import com.demo.tdengineorm.entity.TestDeviceA;
-import com.demo.tdengineorm.entity.TestDeviceB;
-import com.kalus.tdengineorm.enums.JoinTypeEnum;
-import com.kalus.tdengineorm.enums.SelectJoinSymbolEnum;
-import com.kalus.tdengineorm.enums.TdSelectFuncEnum;
-import com.kalus.tdengineorm.mapper.TDengineMapper;
-import com.kalus.tdengineorm.wrapper.AbstractTdQueryWrapper;
-import com.kalus.tdengineorm.wrapper.TdQueryWrapper;
-import com.kalus.tdengineorm.wrapper.TdWrappers;
+import com.nullen.demo.tdengineorm.DemoApplication;
+import com.nullen.demo.tdengineorm.entity.TestDeviceA;
+import com.nullen.demo.tdengineorm.entity.TestDeviceB;
+import com.nullen.tdengineorm.enums.JoinTypeEnum;
+import com.nullen.tdengineorm.enums.SelectJoinSymbolEnum;
+import com.nullen.tdengineorm.enums.TdSelectFuncEnum;
+import com.nullen.tdengineorm.mapper.TDengineMapper;
+import com.nullen.tdengineorm.wrapper.AbstractTdQueryWrapper;
+import com.nullen.tdengineorm.wrapper.TdQueryWrapper;
+import com.nullen.tdengineorm.wrapper.TdWrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Klaus
+ * @author Nullen
  */
 @Slf4j
 @SpringBootTest(classes = DemoApplication.class)
@@ -217,7 +217,7 @@ public class SimpleTest {
 
     private static TestDeviceA buildDeviceA(long time, Long testDeviceBId) {
         TestDeviceA testDeviceA = new TestDeviceA();
-        testDeviceA.setTs(new Timestamp(time));
+        testDeviceA.setTs(time);
         testDeviceA.setAge(12);
         testDeviceA.setFl1(12F);
         testDeviceA.setName("12");
@@ -234,7 +234,7 @@ public class SimpleTest {
 
     private static TestDeviceB buildDeviceB(long time, String deviceBCode) {
         TestDeviceB testDeviceB = new TestDeviceB();
-        testDeviceB.setTs(new Timestamp(time));
+        testDeviceB.setTs(time);
         testDeviceB.setDeviceCode(deviceBCode);
         testDeviceB.setName("aaa");
         testDeviceB.setAge(11);
