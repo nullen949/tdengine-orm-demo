@@ -8,7 +8,7 @@ import com.nullen.demo.tdengineorm.entity.TestDeviceB;
 import com.nullen.tdengineorm.enums.JoinTypeEnum;
 import com.nullen.tdengineorm.enums.SelectJoinSymbolEnum;
 import com.nullen.tdengineorm.enums.TdSelectFuncEnum;
-import com.nullen.tdengineorm.mapper.TDengineMapper;
+import com.nullen.tdengineorm.repository.TDengineRepository;
 import com.nullen.tdengineorm.wrapper.AbstractTdQueryWrapper;
 import com.nullen.tdengineorm.wrapper.TdQueryWrapper;
 import com.nullen.tdengineorm.wrapper.TdWrappers;
@@ -31,13 +31,13 @@ import java.util.List;
 public class SimpleTest {
 
     @Resource
-    private TDengineMapper tdengineMapper;
+    private TDengineRepository tdengineRepository;
 
 
     @Test
     void testCreateStableTable() {
-        int testDeviceASTableResult = tdengineMapper.createStableTable(TestDeviceA.class);
-        int testDeviceBSTableResult = tdengineMapper.createStableTable(TestDeviceB.class);
+        int testDeviceASTableResult = tdengineRepository.createStableTable(TestDeviceA.class);
+        int testDeviceBSTableResult = tdengineRepository.createStableTable(TestDeviceB.class);
         log.info("testCreateStableTable result =====> testDeviceASTableResult:{}, testDeviceBSTableResult:{}", testDeviceASTableResult, testDeviceBSTableResult);
     }
 
@@ -49,11 +49,11 @@ public class SimpleTest {
         long time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
         String deviceCode = "0";
         TestDeviceB testDeviceB = buildDeviceB(time, deviceCode);
-        tdengineMapper.insertUsing(testDeviceB, s -> s + "_" + deviceCode);
+        tdengineRepository.insertUsing(testDeviceB, s -> s + "_" + deviceCode);
 
         TestDeviceA testDeviceA = buildDeviceA(time, testDeviceB.getId());
 
-        tdengineMapper.insertUsing(testDeviceA, s -> s + "_" + deviceCode);
+        tdengineRepository.insertUsing(testDeviceA, s -> s + "_" + deviceCode);
     }
 
 
@@ -67,8 +67,8 @@ public class SimpleTest {
         TestDeviceB testDeviceB = buildDeviceB(time, deviceCode);
         TestDeviceA testDeviceA = buildDeviceA(time, testDeviceB.getId());
 
-        tdengineMapper.insert(testDeviceA, s -> s + "_0");
-        tdengineMapper.insert(testDeviceB, s -> s + "_0");
+        tdengineRepository.insert(testDeviceA, s -> s + "_0");
+        tdengineRepository.insert(testDeviceB, s -> s + "_0");
     }
 
 
@@ -77,8 +77,8 @@ public class SimpleTest {
      */
     @Test
     void getLastOne() {
-        System.out.println(tdengineMapper.getLastOneByTs(TestDeviceA.class));
-        System.out.println(tdengineMapper.getLastOneByTs(TestDeviceB.class));
+        System.out.println(tdengineRepository.getLastOneByTs(TestDeviceA.class));
+        System.out.println(tdengineRepository.getLastOneByTs(TestDeviceB.class));
     }
 
 
@@ -87,7 +87,7 @@ public class SimpleTest {
      */
     @Test
     void getOne() {
-        System.out.println(tdengineMapper.getOne(
+        System.out.println(tdengineRepository.getOne(
                 TdWrappers.queryWrapper(TestDeviceA.class)
                         .selectAll()
                         .eq(TestDeviceA::getTs, "2024-06-19 19:34:08")));
@@ -109,8 +109,8 @@ public class SimpleTest {
             listA.add(testDeviceA);
             listB.add(testDeviceB);
         }
-        tdengineMapper.batchInsertUsing(TestDeviceA.class, listA, s -> s + "_0");
-        tdengineMapper.batchInsertUsing(TestDeviceB.class, listB, s -> s + "_0");
+        tdengineRepository.batchInsertUsing(TestDeviceA.class, listA, s -> s + "_0");
+        tdengineRepository.batchInsertUsing(TestDeviceB.class, listB, s -> s + "_0");
     }
 
 
@@ -122,7 +122,7 @@ public class SimpleTest {
                         .eq(TestDeviceA::getTg1, "13")
                         .limit(5000);
 
-        List<TestDeviceA> list = tdengineMapper.list(wrapper);
+        List<TestDeviceA> list = tdengineRepository.list(wrapper);
         log.info("{}", JSONUtil.toJsonStr(list));
     }
 
@@ -131,7 +131,7 @@ public class SimpleTest {
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class)
                 .selectAll()
                 .eq("tg1", "13").limit(2, 3000);
-        System.out.println(tdengineMapper.list(wrapper));
+        System.out.println(tdengineRepository.list(wrapper));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class SimpleTest {
                 .selectFunc(TdSelectFuncEnum.LAST, TestDeviceA::getId)
                 .eq(TestDeviceA::getTg1, "13")
                 .intervalWindow("30m");
-        System.out.println(tdengineMapper.list(wrapper));
+        System.out.println(tdengineRepository.list(wrapper));
     }
 
 
@@ -155,7 +155,7 @@ public class SimpleTest {
                 .selectFunc(TdSelectFuncEnum.LAST, "id")
                 .eq("tg1", "13")
                 .intervalWindow("30m");
-        System.out.println(tdengineMapper.list(wrapper));
+        System.out.println(tdengineRepository.list(wrapper));
     }
 
 
@@ -177,7 +177,7 @@ public class SimpleTest {
                 .selectAll()
                 .orderByDesc(TestDeviceA::getTs);
 
-        System.out.println(tdengineMapper.list(wrapper));
+        System.out.println(tdengineRepository.list(wrapper));
     }
 
     @Test
@@ -196,7 +196,7 @@ public class SimpleTest {
                 .orderByDesc(TestDeviceA::getAge)
                 .limit(12);
 
-        System.out.println(tdengineMapper.list(wrapper));
+        System.out.println(tdengineRepository.list(wrapper));
     }
 
 
@@ -210,7 +210,7 @@ public class SimpleTest {
                         .eq("test_device_b.id", 1803270034955735040L)
                         .limit(5000);
 
-        List<TestDeviceA> list = tdengineMapper.list(wrapper);
+        List<TestDeviceA> list = tdengineRepository.list(wrapper);
         log.info("{}", JSONUtil.toJsonStr(list));
     }
 

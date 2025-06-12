@@ -1,10 +1,7 @@
-spring:
-  datasource:
-    driver-class-name: com.taosdata.jdbc.rs.RestfulDriver
-    # 自行修改数据源连接信息
-    url: jdbc:TAOS-RS://127.0.0.1:6041/test
-    username: root
-    password: taosdata
-td-orm:
+
+tdengine-orm:
   # 选择SQL日志输出的等级, 默认为不输出日志
   log-level: info
+  driver-class-name: com.taosdata.jdbc.rs.RestfulDriver
+  # 自行修改数据源连接信息
+  url: jdbc:TAOS-RS://127.0.0.1:6041/test
