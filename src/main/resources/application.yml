@@ -1,3 +1,5 @@
+server:
+  port: 7648
 
 tdengine-orm:
   # 选择SQL日志输出的等级, 默认为不输出日志

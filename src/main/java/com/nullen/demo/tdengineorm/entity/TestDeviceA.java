@@ -3,10 +3,8 @@ package com.nullen.demo.tdengineorm.entity;
 import com.nullen.tdengineorm.annotation.TdColumn;
 import com.nullen.tdengineorm.annotation.TdTable;
 import com.nullen.tdengineorm.annotation.TdTag;
-import com.nullen.tdengineorm.entity.TdBaseEntity;
 import com.nullen.tdengineorm.enums.TdFieldTypeEnum;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.sql.Timestamp;
 
@@ -19,8 +17,8 @@ import java.sql.Timestamp;
  */
 @Data
 @TdTable("tb_test_device_a")
-@EqualsAndHashCode(callSuper = true)
-public class TestDeviceA extends TdBaseEntity {
+public class TestDeviceA {
+    private Long ts;
     /**
      * 使用 @TdField 注解指定字段类型以及长度, 未指定时默认为INT类型
      */

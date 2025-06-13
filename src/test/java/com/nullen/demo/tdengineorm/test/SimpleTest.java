@@ -46,7 +46,7 @@ public class SimpleTest {
      */
     @Test
     void insertUsing() {
-        long time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
+        long time = System.currentTimeMillis();
         String deviceCode = "0";
         TestDeviceB testDeviceB = buildDeviceB(time, deviceCode);
         tdengineRepository.insertUsing(testDeviceB, s -> s + "_" + deviceCode);
@@ -62,7 +62,7 @@ public class SimpleTest {
      */
     @Test
     void insert() {
-        long time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
+        long time = getTestTs();
         String deviceCode = "0";
         TestDeviceB testDeviceB = buildDeviceB(time, deviceCode);
         TestDeviceA testDeviceA = buildDeviceA(time, testDeviceB.getId());
@@ -77,8 +77,8 @@ public class SimpleTest {
      */
     @Test
     void getLastOne() {
-        System.out.println(tdengineRepository.getLastOneByTs(TestDeviceA.class));
-        System.out.println(tdengineRepository.getLastOneByTs(TestDeviceB.class));
+        System.out.println(JSONUtil.toJsonStr(tdengineRepository.getLastOneByTs(TestDeviceA.class)));
+        System.out.println(JSONUtil.toJsonStr(tdengineRepository.getLastOneByTs(TestDeviceB.class)));
     }
 
 
@@ -90,7 +90,7 @@ public class SimpleTest {
         System.out.println(tdengineRepository.getOne(
                 TdWrappers.queryWrapper(TestDeviceA.class)
                         .selectAll()
-                        .eq(TestDeviceA::getTs, "2024-06-19 19:34:08")));
+                        .eq(TestDeviceA::getTs, getTestTs())));
     }
 
 
@@ -102,7 +102,7 @@ public class SimpleTest {
         List<TestDeviceA> listA = new ArrayList<>();
         List<TestDeviceB> listB = new ArrayList<>();
         for (int i = 0; i < 10000; i++) {
-            long time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
+            long time = System.currentTimeMillis();
             TestDeviceB testDeviceB = buildDeviceB(time, "0");
             TestDeviceA testDeviceA = buildDeviceA(time, testDeviceB.getId());
 
@@ -119,7 +119,7 @@ public class SimpleTest {
         AbstractTdQueryWrapper<TestDeviceA> wrapper =
                 TdWrappers.queryWrapper(TestDeviceA.class)
                         .selectAll()
-                        .eq(TestDeviceA::getTg1, "13")
+                        .eq(TestDeviceA::getAge, 12)
                         .limit(5000);
 
         List<TestDeviceA> list = tdengineRepository.list(wrapper);
@@ -130,17 +130,20 @@ public class SimpleTest {
     void testStrList() {
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class)
                 .selectAll()
-                .eq("tg1", "13").limit(2, 3000);
+                .eq("tg1", 12)
+                .limit(2, 3000);
         System.out.println(tdengineRepository.list(wrapper));
     }
 
     @Test
     void simpleWindowFuncLambdaQuery() {
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class)
-                .selectFunc(TdSelectFuncEnum.FIRST, TestDeviceA::getTs, TestDeviceA::getName, TestDeviceA::getAge)
+                .selectFunc(TdSelectFuncEnum.FIRST, TestDeviceA::getTs)
+                .selectFunc(TdSelectFuncEnum.FIRST, TestDeviceA::getName)
+                .selectFunc(TdSelectFuncEnum.FIRST, TestDeviceA::getAge)
                 .selectFunc(TdSelectFuncEnum.LAST, TestDeviceA::getId)
-                .eq(TestDeviceA::getTg1, "13")
-                .intervalWindow("30m");
+                .eq(TestDeviceA::getTg1, "12")
+                .intervalWindow("10m");
         System.out.println(tdengineRepository.list(wrapper));
     }
 
@@ -153,25 +156,29 @@ public class SimpleTest {
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class)
                 .selectFunc(TdSelectFuncEnum.FIRST, "ts", "name", "age")
                 .selectFunc(TdSelectFuncEnum.LAST, "id")
-                .eq("tg1", "13")
-                .intervalWindow("30m");
+                .eq("tg1", 12)
+                .intervalWindow("10m");
         System.out.println(tdengineRepository.list(wrapper));
     }
 
 
     @Test
     void complexWindowFunc() {
+        // TODO 复杂窗口函数使用
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class);
     }
 
 
+    /**
+     * 嵌套lambda查询
+     */
     @Test
     void nestingLambdaQuery() {
         TdQueryWrapper<TestDeviceA> wrapper = TdWrappers.queryWrapper(TestDeviceA.class)
                 .innerQueryWrapper(innerWrapper ->
                         innerWrapper
                                 .selectFunc(TdSelectFuncEnum.FIRST, TestDeviceA::getTs)
-                                .eq(TestDeviceA::getTg1, "13")
+                                .eq(TestDeviceA::getTg1, 12)
                                 .intervalWindow("30m")
                 )
                 .selectAll()
@@ -190,8 +197,8 @@ public class SimpleTest {
                                     .operate(SelectJoinSymbolEnum.PLUS)
                                     .select(TdSelectFuncEnum.LAST, TestDeviceA::getAge);
                         })
-                        .eq(TestDeviceA::getTg1, "13")
-                        .intervalWindow("30m")
+                        .eq(TestDeviceA::getTg1, 12)
+                        .intervalWindow("10m")
                 )
                 .orderByDesc(TestDeviceA::getAge)
                 .limit(12);
@@ -242,4 +249,9 @@ public class SimpleTest {
         return testDeviceB;
     }
 
+    private static long getTestTs() {
+        return LocalDateTime.parse("2024-06-19T19:34:08") // 注意格式中的 'T'
+                .toInstant(ZoneOffset.UTC) // 转换为 UTC 时间戳
+                .toEpochMilli();
+    }
 }

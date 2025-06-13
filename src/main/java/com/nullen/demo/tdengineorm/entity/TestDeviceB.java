@@ -2,9 +2,7 @@ package com.nullen.demo.tdengineorm.entity;
 
 import com.nullen.tdengineorm.annotation.TdColumn;
 import com.nullen.tdengineorm.annotation.TdTag;
-import com.nullen.tdengineorm.entity.TdBaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 用于测试关联查询
@@ -12,8 +10,12 @@ import lombok.EqualsAndHashCode;
  * @author Nullen
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class TestDeviceB extends TdBaseEntity {
+public class TestDeviceB {
+    /**
+     * TDengine要求每个表的第一个字段, 必须为ts, 表示数据的时间戳
+     * Java可以使用Long或者Timestamp都行
+     */
+    private Long ts;
     /**
      * 关联设备TestDeviceA.deviceBId字段
      */
